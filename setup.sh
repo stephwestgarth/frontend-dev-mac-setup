@@ -59,10 +59,28 @@ else
   printf '\nNVM already installed. Use nvm --help to get started.\n'
 fi
 
+if [[ ! -s "$HOME/.rvm/scripts/rvm" ]]; then
+  printf '\nWould you like to install rvm and latest stable ruby? (y/n) '
+  read acceptRvm
+
+  if [[ $acceptRvm =~ 'y' ]]; then
+    printf '\nWould you like to include rails? (y/n) ' acceptRails
+
+    if [[ $acceptRails =~ 'y' ]]; then
+      \curl -sSL https://get.rvm.io | bash -s stable
+    else
+      \curl -sSL https://get.rvm.io | bash -s stable --rails
+    fi
+  fi
+
+else
+  printf '\nRVM already installed. Use rvm -h to get started.\n'
+fi
+
 printf '\nFinal step: reloading profiles if required...'
 terminalType=$(ps -p $$ -oargs=)
 
-if [[ $terminalType == *'zsh'* && -f ~/.zshrc ]]; then
+if [[ $terminalType == *'zsh'* ]] && [[ -f ~/.zshrc ]]; then
    # assume Zsh
    source ~/.zshrc
    printf '\n ~/.zshrc file reloaded.\n'
